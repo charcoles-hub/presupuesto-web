@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calcula tu web · Sergio García</title>
+<meta name="description" content="Marca lo que necesita tu negocio y calcula al momento cuánto cuesta tu web y en cuánto tiempo la tienes.">
+<meta name="robots" content="noindex">
+<style>
+  :root {
+    --bg: #F6F7F9;
+    --surface: #FFFFFF;
+    --surface-2: #F0F3F6;
+    --ink: #14202A;
+    --muted: #61707E;
+    --line: #DCE2E8;
+    --accent: #0B6E62;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #E4F0EE;
+    --shadow: 0 1px 2px rgba(20,32,42,.06), 0 8px 24px rgba(20,32,42,.06);
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0F151A; --surface: #161E25; --surface-2: #1B242C;
+      --ink: #E7EDF2; --muted: #94A2AE; --line: #27323B;
+      --accent: #43BCAA; --accent-ink: #08211E; --accent-soft: #14302C;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0F151A; --surface: #161E25; --surface-2: #1B242C;
+    --ink: #E7EDF2; --muted: #94A2AE; --line: #27323B;
+    --accent: #43BCAA; --accent-ink: #08211E; --accent-soft: #14302C;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--sans); line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 28px 18px 180px; }
+  @media (min-width: 900px) { .wrap { padding-bottom: 60px; } }
+
+  header { margin-bottom: 26px; }
+  .eyebrow {
+    font-size: .72rem; text-transform: uppercase; letter-spacing: .12em;
+    color: var(--accent); font-weight: 700; margin: 0 0 8px;
+  }
+  h1 {
+    font-size: clamp(1.6rem, 1.2rem + 2vw, 2.4rem);
+    line-height: 1.12; margin: 0 0 10px; letter-spacing: -.025em; text-wrap: balance;
+  }
+  .lede { color: var(--muted); margin: 0; max-width: 58ch; font-size: 1rem; }
+
+  .cols { display: grid; grid-template-columns: 1fr; gap: 22px; align-items: start; }
+  @media (min-width: 900px) { .cols { grid-template-columns: minmax(0,1fr) 300px; gap: 30px; } }
+  .stack { display: flex; flex-direction: column; gap: 20px; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 10px; box-shadow: var(--shadow); overflow: hidden;
+  }
+  .card > h2 {
+    margin: 0; padding: 14px 18px 12px;
+    font-size: .72rem; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--muted); font-weight: 600;
+    border-bottom: 1px solid var(--line); background: var(--surface-2);
+  }
+  .card > h2 .hint {
+    display: block; text-transform: none; letter-spacing: normal;
+    font-weight: 400; font-size: .82rem; color: var(--muted); margin-top: 3px;
+  }
+
+  .base { padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .base .top { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; }
+  .base .t { font-weight: 700; font-size: 1.05rem; }
+  .base .p { font-family: var(--mono); font-weight: 700; font-size: 1.05rem; white-space: nowrap; }
+  .base ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: .88rem; }
+  .base li { margin: 2px 0; }
+
+  .row {
+    display: grid; grid-template-columns: 22px minmax(0,1fr) auto;
+    gap: 12px; align-items: start;
+    padding: 12px 18px; border-bottom: 1px solid var(--line); cursor: pointer;
+  }
+  .row:last-child { border-bottom: 0; }
+  .row:hover { background: var(--surface-2); }
+  .row input { width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--accent); cursor: pointer; }
+  .row input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .name { font-weight: 600; font-size: .95rem; }
+  .desc { color: var(--muted); font-size: .84rem; margin-top: 2px; }
+  .price {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: .95rem; white-space: nowrap; text-align: right; padding-top: 1px;
+  }
+  .days { display: block; font-size: .72rem; color: var(--muted); font-weight: 400; }
+
+  .side { display: flex; flex-direction: column; gap: 16px; }
+  @media (min-width: 900px) { .side { position: sticky; top: 22px; } }
+  .totals { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .line { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .line .k { color: var(--muted); font-size: .85rem; }
+  .line .v { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: .9rem; }
+  .line.big .k { color: var(--ink); font-weight: 600; font-size: .95rem; }
+  .line.big .v { font-size: 1.9rem; font-weight: 700; letter-spacing: -.02em; }
+
+  .form { display: flex; flex-direction: column; gap: 12px; padding: 18px; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .field input, .field textarea {
+    font: inherit; font-size: .95rem; padding: 10px 12px;
+    border: 1px solid var(--line); border-radius: 6px;
+    background: var(--bg); color: var(--ink); width: 100%;
+  }
+  .field textarea { min-height: 90px; resize: vertical; }
+  .field input:focus-visible, .field textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .btn {
+    font: inherit; font-weight: 700; font-size: 1rem;
+    padding: 13px 16px; border-radius: 7px;
+    border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
+    cursor: pointer; width: 100%;
+  }
+  .btn:hover { filter: brightness(1.06); }
+  .btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  .bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+    background: var(--surface); border-top: 1px solid var(--line);
+    padding: 12px 18px calc(12px + env(safe-area-inset-bottom));
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    box-shadow: 0 -4px 20px rgba(20,32,42,.08);
+  }
+  @media (min-width: 900px) { .bar { display: none; } }
+  .bar .k { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .bar .v { font-family: var(--mono); font-size: 1.5rem; font-weight: 700; letter-spacing: -.02em; }
+  .bar .btn { width: auto; padding: 11px 18px; font-size: .92rem; }
+
+  footer { margin-top: 26px; color: var(--muted); font-size: .85rem; text-align: center; }
+  footer a { color: var(--accent); }
+  .fine { color: var(--muted); font-size: .8rem; margin: 0; }
+
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Sergio García · Desarrollo web</p>
+    <h1>Calcula lo que cuesta tu web</h1>
+    <p class="lede">Marca lo que necesita tu negocio y verás el precio y el plazo al momento. Sin compromiso: cuando lo envíes te contesto en 24 horas con el presupuesto cerrado por escrito.</p>
+  </header>
+
+  <form class="cols" action="https://formsubmit.co/scharcoles@gmail.com" method="POST" id="form">
+    <input type="hidden" name="_subject" value="Nuevo presupuesto desde la calculadora">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_next" value="https://charcoles-hub.github.io/presupuesto-web/gracias.html">
+    <div class="hp"><label>No rellenar<input type="text" name="_honey" tabindex="-1" autocomplete="off"></label></div>
+    <input type="hidden" name="Total" id="f_total" value="500 €">
+    <input type="hidden" name="Plazo" id="f_plazo" value="7 días">
+
+    <div class="stack" id="catalogo">
+      <section class="card">
+        <h2>Lo que lleva siempre<span class="hint">Es la web completa. A partir de aquí, sólo añades lo que te haga falta.</span></h2>
+        <div class="base">
+          <div class="top">
+            <span class="t">Tu web, entera</span>
+            <span class="p">500 €</span>
+          </div>
+          <ul>
+            <li>Hasta 5 páginas, diseñadas a medida de tu negocio.</li>
+            <li>Se ve perfecta en móvil, que es por donde te va a entrar casi todo el mundo.</li>
+            <li>Tu dominio pagado el primer año y la web puesta en marcha.</li>
+            <li>Formulario de contacto, botón de WhatsApp y mapa para llegar a tu local.</li>
+            <li>Tú no tocas nada: me encargo yo de todo.</li>
+          </ul>
+          <p class="fine">Plazo: 7 días desde que empezamos.</p>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Para que te entren más clientes</h2>
+        <label class="row">
+          <input type="checkbox" name="Quiere" value="Cita online (125 €)" data-precio="125" data-dias="2">
+          <span>
+            <span class="name">Que puedan pedir cita desde la web</span>
+            <span class="desc">Reservan hora ellos solos, sin llamarte, y a ti te llega el aviso.</span>
+          </span>
+          <span class="price">125 €<span class="days">+2 días</span></span>
+        </label>
+        <label class="row">
+          <input type="checkbox" name="Quiere" value="SEO local (110 €)" data-precio="110" data-dias="2">
+          <span>
+            <span class="name">Salir en Google cuando busquen en tu zona</span>
+            <span class="desc">Preparo la web y tu ficha de Google Maps para que aparezcas al buscar tu servicio en tu barrio.</span>
+          </span>
+          <span class="price">110 €<span class="days">+2 días</span></span>
+        </label>
+        <label class="row">
+          <input type="checkbox" name="Quiere" value="Textos escritos por Sergio (100 €)" data-precio="100" data-dias="2">
+          <span>
+            <span class="name">Que escriba yo los textos</span>
+            <span class="desc">Me cuentas a qué te dedicas y yo lo escribo. Si no lo coges, los textos me los mandas tú.</span>
+          </span>
+          <span class="price">100 €<span class="days">+2 días</span></span>
+        </label>
+        <label class="row">
+          <input type="checkbox" name="Quiere" value="Analítica (50 €)" data-precio="50" data-dias="1">
+          <span>
+            <span class="name">Saber cuánta gente entra y qué mira</span>
+            <span class="desc">Para ver si la web funciona y, si algún día quieres hacer publicidad, poder medirla.</span>
+          </span>
+          <span class="price">50 €<span class="days">+1 día</span></span>
+        </label>
+        <label class="row">
+          <input type="checkbox" name="Quiere" value="Instagram integrado (50 €)" data-precio="50" data-dias="1">
+          <span>
+            <span class="name">Que se vea tu Instagram en la web</span>
+            <span class="desc">Tus últimas publicaciones salen solas, sin que tengas que subirlas dos veces.</span>
+          </span>
+          <span class="price">50 €<span class="days">+1 día</span></span>
+        </label>
+      </section>
+
+      <section class="card">
+        <h2>Más contenido</h2>
+        <label class="row">
+          <input type="checkbox" name="Quiere" value="Blog (100 €)" data-precio="100" data-dias="2">
+          <span>
+            <span class="name">Sección de noticias o artículos</span>
+            <span class="desc">Para ir publicando novedades. Los artículos los publico yo cuando me los pases.</span>
+          </span>
+          <span class="price">100 €<span class="days">+2 días</span></span>
+        </label>
+        <label class="row">
+          <input type="checkbox" name="Quiere" value="Galería de trabajos (75 €)" data-precio="75" data-dias="1">
+          <span>
+            <span class="name">Galería con fotos de tus trabajos</span>
+            <span class="desc">Antes y después, obras acabadas, fotos del local. Lo que enseñas es lo que vende.</span>
+          </span>
+          <span class="price">75 €<span class="days">+1 día</span></span>
+        </label>
+        <label class="row">
+          <input type="checkbox" name="Quiere" value="Páginas adicionales (60 €)" data-precio="60" data-dias="1">
+          <span>
+            <span class="name">Más páginas de las 5 que lleva</span>
+            <span class="desc">Tres páginas más, por si tienes muchos servicios que explicar por separado.</span>
+          </span>
+          <span class="price">60 €<span class="days">+1 día</span></span>
+        </label>
+      </section>
+
+      <section class="card">
+        <h2>Funciones</h2>
+        <label class="row">
+          <input type="checkbox" name="Quiere" value="Segundo idioma (150 €)" data-precio="150" data-dias="2">
+          <span>
+            <span class="name">La web en dos idiomas</span>
+            <span class="desc">Toda traducida y con selector. Catalán, castellano o inglés.</span>
+          </span>
+          <span class="price">150 €<span class="days">+2 días</span></span>
+        </label>
+        <label class="row">
+          <input type="checkbox" name="Quiere" value="Formulario avanzado (75 €)" data-precio="75" data-dias="1">
+          <span>
+            <span class="name">Formulario con varios pasos o archivos</span>
+            <span class="desc">Si necesitas que te manden documentos o que el aviso llegue a personas distintas.</span>
+          </span>
+          <span class="price">75 €<span class="days">+1 día</span></span>
+        </label>
+        <label class="row">
+          <input type="checkbox" name="Quiere" value="Correo profesional (60 €)" data-precio="60" data-dias="1">
+          <span>
+            <span class="name">Correo con tu propio dominio</span>
+            <span class="desc">Del tipo hola@tunegocio.com en vez del de Gmail. La cuota del buzón la pagas tú aparte.</span>
+          </span>
+          <span class="price">60 €<span class="days">+1 día</span></span>
+        </label>
+      </section>
+
+      <section class="card">
+        <h2>Papeleo y mudanza</h2>
+        <label class="row">
+          <input type="checkbox" name="Quiere" value="Textos legales y cookies (75 €)" data-precio="75" data-dias="1">
+          <span>
+            <span class="name">Textos legales y aviso de cookies</span>
+            <span class="desc">Aviso legal, privacidad y cookies como pide la ley. Si recoges datos de clientes, lo necesitas.</span>
+          </span>
+          <span class="price">75 €<span class="days">+1 día</span></span>
+        </label>
+        <label class="row">
+          <input type="checkbox" name="Quiere" value="Traslado desde su web actual (100 €)" data-precio="100" data-dias="2">
+          <span>
+            <span class="name">Traer el contenido de tu web actual</span>
+            <span class="desc">Paso lo que ya tienes y redirijo las direcciones para no perder el Google que has ganado.</span>
+          </span>
+          <span class="price">100 €<span class="days">+2 días</span></span>
+        </label>
+      </section>
+
+      <section class="card">
+        <h2>Mantenimiento<span class="hint">Va aparte del precio de la web. Es opcional y puedes decidirlo después.</span></h2>
+        <label class="row">
+          <input type="radio" name="Mantenimiento" value="Sin mantenimiento" data-mes="0" checked>
+          <span>
+            <span class="name">Nada, gracias</span>
+            <span class="desc">Te entrego la web y ya está. Si algún día quieres cambios, te los presupuesto sueltos.</span>
+          </span>
+          <span class="price">—</span>
+        </label>
+        <label class="row">
+          <input type="radio" name="Mantenimiento" value="Básico 25 €/mes" data-mes="25">
+          <span>
+            <span class="name">Básico</span>
+            <span class="desc">Alojamiento, copias de seguridad, actualizaciones y un cambio pequeño al mes.</span>
+          </span>
+          <span class="price">25 €<span class="days">al mes</span></span>
+        </label>
+        <label class="row">
+          <input type="radio" name="Mantenimiento" value="Completo 50 €/mes" data-mes="50">
+          <span>
+            <span class="name">Completo</span>
+            <span class="desc">Lo anterior más los cambios que necesites y un repaso cada mes de cómo va la web.</span>
+          </span>
+          <span class="price">50 €<span class="days">al mes</span></span>
+        </label>
+      </section>
+    </div>
+
+    <aside class="side">
+      <div class="totals">
+        <div class="line big"><span class="k">Total</span><span class="v" id="total">500 €</span></div>
+        <div class="line"><span class="k">Plazo</span><span class="v" id="plazo">7 días</span></div>
+        <div class="line"><span class="k">Después, cada mes</span><span class="v" id="mensual">—</span></div>
+      </div>
+
+      <div class="card">
+        <h2>Pídeme el presupuesto<span class="hint">Te contesto en 24 horas.</span></h2>
+        <div class="form">
+          <div class="field">
+            <label for="negocio">Tu negocio</label>
+            <input id="negocio" name="Negocio" type="text" required autocomplete="organization">
+          </div>
+          <div class="field">
+            <label for="nombre">Tu nombre</label>
+            <input id="nombre" name="Nombre" type="text" required autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="tel">Teléfono</label>
+            <input id="tel" name="Teléfono" type="tel" required autocomplete="tel" inputmode="tel">
+          </div>
+          <div class="field">
+            <label for="email">Correo</label>
+            <input id="email" name="Email" type="email" required autocomplete="email">
+          </div>
+          <div class="field">
+            <label for="msg">Algo que deba saber</label>
+            <textarea id="msg" name="Comentarios" placeholder="A qué te dedicas, si ya tienes web, para cuándo la necesitas…"></textarea>
+          </div>
+          <button class="btn" type="submit">Pedir presupuesto</button>
+          <p class="fine">Sólo uso tus datos para contestarte a esto. Ni comparto ni vendo nada.</p>
+        </div>
+      </div>
+    </aside>
+
+    <div class="bar">
+      <span>
+        <span class="k">Total</span><br>
+        <span class="v" id="barTotal">500 €</span>
+      </span>
+      <button class="btn" type="button" id="irForm">Pedir presupuesto</button>
+    </div>
+  </form>
+
+  <footer>
+    <p>Sergio García · Cornellà de Llobregat · <a href="tel:+34620650597">620 650 597</a><br>
+    <a href="https://charcoles-hub.github.io/">Mira otros trabajos míos</a></p>
+  </footer>
+</div>
+
+<script>
+  const BASE = 500, DIAS = 7;
+  const cat = document.getElementById('catalogo');
+  const eur = n => n.toLocaleString('es-ES') + ' €';
+
+  function pintar() {
+    const marcados = [...cat.querySelectorAll('input[type="checkbox"]:checked')];
+    const total = BASE + marcados.reduce((a, i) => a + (+i.dataset.precio), 0);
+    const dias = DIAS + marcados.reduce((a, i) => a + (+i.dataset.dias), 0);
+    const mes = +cat.querySelector('input[name="Mantenimiento"]:checked').dataset.mes;
+
+    document.getElementById('total').textContent = eur(total);
+    document.getElementById('barTotal').textContent = eur(total);
+    document.getElementById('plazo').textContent = dias + ' días';
+    document.getElementById('mensual').textContent = mes ? eur(mes) + '/mes' : '—';
+    document.getElementById('f_total').value = eur(total);
+    document.getElementById('f_plazo').value = dias + ' días';
+  }
+
+  cat.addEventListener('change', pintar);
+  document.getElementById('irForm').addEventListener('click', () => {
+    document.getElementById('negocio').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.getElementById('negocio').focus({ preventScroll: true });
+  });
+
+  pintar();
+</script>
+</body>
+</html>
