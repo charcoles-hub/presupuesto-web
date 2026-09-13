@@ -6,144 +6,175 @@
 <title>Calcula tu web · Sergio García</title>
 <meta name="description" content="Marca lo que necesita tu negocio y calcula al momento cuánto cuesta tu web y en cuánto tiempo la tienes.">
 <meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&display=swap" rel="stylesheet">
 <style>
+  /* Mismos tokens que el portfolio (charcoles-hub.github.io): quien llega aqui
+     desde alli tiene que notar que sigue en la misma casa. Galeria oscura,
+     Archivo y el naranja de siempre; nada de tema claro. */
   :root {
-    --bg: #F6F7F9;
-    --surface: #FFFFFF;
-    --surface-2: #F0F3F6;
-    --ink: #14202A;
-    --muted: #61707E;
-    --line: #DCE2E8;
-    --accent: #0B6E62;
-    --accent-ink: #FFFFFF;
-    --accent-soft: #E4F0EE;
-    --shadow: 0 1px 2px rgba(20,32,42,.06), 0 8px 24px rgba(20,32,42,.06);
-    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-    --mono: ui-monospace, SFMono-Regular, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #0F151A; --surface: #161E25; --surface-2: #1B242C;
-      --ink: #E7EDF2; --muted: #94A2AE; --line: #27323B;
-      --accent: #43BCAA; --accent-ink: #08211E; --accent-soft: #14302C;
-      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
-    }
-  }
-  :root[data-theme="dark"] {
-    --bg: #0F151A; --surface: #161E25; --surface-2: #1B242C;
-    --ink: #E7EDF2; --muted: #94A2AE; --line: #27323B;
-    --accent: #43BCAA; --accent-ink: #08211E; --accent-soft: #14302C;
-    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+    --bg:        oklch(0.155 0.006 260);
+    --surface:   oklch(0.185 0.008 260);
+    --surface-2: oklch(0.21 0.009 260);
+    --line:      oklch(0.255 0.01 260);
+    --ink:       oklch(0.96 0.004 90);
+    --muted:     oklch(0.67 0.012 260);
+    --faint:     oklch(0.6 0.012 260);
+    --accent:    oklch(0.68 0.2 35);
+    --accent-ink: oklch(0.155 0.006 260);
+    --shadow: 0 1px 2px rgb(0 0 0 / .5), 0 18px 40px -20px rgb(0 0 0 / .8);
+    --sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
+    --muelle: linear(
+      0, 0.009, 0.035 2.1%, 0.141 4.4%, 0.723 12.9%, 0.938 16.7%, 1.017,
+      1.077, 1.121, 1.149 24.3%, 1.159, 1.163, 1.161, 1.154 29.9%, 1.129 32.8%,
+      1.051 39.6%, 1.017 43.1%, 0.991, 0.977 51%, 0.974 53.8%, 0.975 57.1%,
+      0.997 69.8%, 1.003 76.9%, 1
+    );
   }
 
   * { box-sizing: border-box; }
+  html { background: var(--bg); }
   body {
     margin: 0; background: var(--bg); color: var(--ink);
     font-family: var(--sans); line-height: 1.5;
-    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: 100%;
   }
-  .wrap { max-width: 900px; margin: 0 auto; padding: 28px 18px 180px; }
-  @media (min-width: 900px) { .wrap { padding-bottom: 60px; } }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 28px 18px 180px; }
+  @media (min-width: 900px) { .wrap { padding: 44px 24px 64px; } }
 
-  header { margin-bottom: 26px; }
+  header { margin-bottom: 30px; display: flex; flex-direction: column; gap: 10px; }
+  .volver {
+    width: fit-content; font-size: .62rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .16em; color: var(--faint); text-decoration: none;
+    transition: color .2s ease;
+  }
+  .volver:hover { color: var(--ink); }
   .eyebrow {
-    font-size: .72rem; text-transform: uppercase; letter-spacing: .12em;
-    color: var(--accent); font-weight: 700; margin: 0 0 8px;
+    font-size: .62rem; text-transform: uppercase; letter-spacing: .16em;
+    color: var(--accent); font-weight: 600; margin: 0;
   }
   h1 {
-    font-size: clamp(1.6rem, 1.2rem + 2vw, 2.4rem);
-    line-height: 1.12; margin: 0 0 10px; letter-spacing: -.025em; text-wrap: balance;
+    font-size: clamp(2.2rem, 1.4rem + 3.4vw, 4rem);
+    font-weight: 800; font-stretch: 110%;
+    line-height: .95; margin: 0; letter-spacing: -.04em; text-wrap: balance;
   }
-  .lede { color: var(--muted); margin: 0; max-width: 58ch; font-size: 1rem; }
+  .lede { color: var(--muted); margin: 0; max-width: 56ch; font-size: 1rem; text-wrap: pretty; }
+  @media (min-width: 900px) { .lede { font-size: 1.08rem; } }
 
   .cols { display: grid; grid-template-columns: 1fr; gap: 22px; align-items: start; }
-  @media (min-width: 900px) { .cols { grid-template-columns: minmax(0,1fr) 300px; gap: 30px; } }
-  .stack { display: flex; flex-direction: column; gap: 20px; }
+  @media (min-width: 900px) { .cols { grid-template-columns: minmax(0,1fr) 320px; gap: 30px; } }
+  .stack { display: flex; flex-direction: column; gap: 18px; }
 
   .card {
     background: var(--surface); border: 1px solid var(--line);
-    border-radius: 10px; box-shadow: var(--shadow); overflow: hidden;
+    border-radius: 12px; overflow: hidden;
   }
   .card > h2 {
     margin: 0; padding: 14px 18px 12px;
-    font-size: .72rem; text-transform: uppercase; letter-spacing: .1em;
-    color: var(--muted); font-weight: 600;
+    font-size: .62rem; text-transform: uppercase; letter-spacing: .16em;
+    color: var(--accent); font-weight: 600;
     border-bottom: 1px solid var(--line); background: var(--surface-2);
   }
   .card > h2 .hint {
     display: block; text-transform: none; letter-spacing: normal;
-    font-weight: 400; font-size: .82rem; color: var(--muted); margin-top: 3px;
+    font-weight: 400; font-size: .82rem; color: var(--muted); margin-top: 4px;
   }
 
   .base { padding: 18px; display: flex; flex-direction: column; gap: 10px; }
   .base .top { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; }
-  .base .t { font-weight: 700; font-size: 1.05rem; }
-  .base .p { font-family: var(--mono); font-weight: 700; font-size: 1.05rem; white-space: nowrap; }
+  .base .t { font-weight: 700; font-size: 1.05rem; letter-spacing: -.02em; }
+  .base .p {
+    font-weight: 800; font-stretch: 110%; font-size: 1.15rem;
+    font-variant-numeric: tabular-nums; white-space: nowrap; letter-spacing: -.02em;
+  }
   .base ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: .88rem; }
-  .base li { margin: 2px 0; }
+  .base li { margin: 3px 0; }
 
   .row {
     display: grid; grid-template-columns: 22px minmax(0,1fr) auto;
     gap: 12px; align-items: start;
-    padding: 12px 18px; border-bottom: 1px solid var(--line); cursor: pointer;
+    padding: 13px 18px; border-bottom: 1px solid var(--line); cursor: pointer;
+    transition: background-color .2s ease;
   }
   .row:last-child { border-bottom: 0; }
   .row:hover { background: var(--surface-2); }
   .row input { width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--accent); cursor: pointer; }
   .row input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .row:has(input:checked) { background: color-mix(in oklch, var(--accent), transparent 92%); }
   .name { font-weight: 600; font-size: .95rem; }
-  .desc { color: var(--muted); font-size: .84rem; margin-top: 2px; }
+  .desc { color: var(--muted); font-size: .84rem; margin-top: 3px; }
   .price {
-    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-variant-numeric: tabular-nums; font-weight: 700;
     font-size: .95rem; white-space: nowrap; text-align: right; padding-top: 1px;
   }
-  .days { display: block; font-size: .72rem; color: var(--muted); font-weight: 400; }
+  .days { display: block; font-size: .72rem; color: var(--faint); font-weight: 500; }
 
   .side { display: flex; flex-direction: column; gap: 16px; }
   @media (min-width: 900px) { .side { position: sticky; top: 22px; } }
-  .totals { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .totals {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    box-shadow: var(--shadow); padding: 18px; display: flex; flex-direction: column; gap: 10px;
+  }
   .line { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
   .line .k { color: var(--muted); font-size: .85rem; }
-  .line .v { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: .9rem; }
+  .line .v { font-variant-numeric: tabular-nums; font-size: .9rem; }
+  .line.big { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 2px; }
   .line.big .k { color: var(--ink); font-weight: 600; font-size: .95rem; }
-  .line.big .v { font-size: 1.9rem; font-weight: 700; letter-spacing: -.02em; }
+  .line.big .v {
+    font-size: 2.2rem; font-weight: 800; font-stretch: 110%;
+    letter-spacing: -.035em; color: var(--ink);
+  }
 
-  .form { display: flex; flex-direction: column; gap: 12px; padding: 18px; }
-  .field { display: flex; flex-direction: column; gap: 5px; }
-  .field label { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+  .form { display: flex; flex-direction: column; gap: 14px; padding: 18px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-size: .68rem; text-transform: uppercase; letter-spacing: .12em;
+    color: var(--ink); font-weight: 600;
+  }
   .field input, .field textarea {
-    font: inherit; font-size: .95rem; padding: 10px 12px;
-    border: 1px solid var(--line); border-radius: 6px;
+    font: inherit; font-size: .95rem; padding: 11px 13px;
+    border: 1px solid var(--line); border-radius: 10px;
     background: var(--bg); color: var(--ink); width: 100%;
+    transition: border-color .2s ease, box-shadow .2s ease;
   }
   .field textarea { min-height: 90px; resize: vertical; }
-  .field input:focus-visible, .field textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  .field input:hover, .field textarea:hover { border-color: var(--faint); }
+  .field input:focus-visible, .field textarea:focus-visible {
+    outline: none; border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent), transparent 78%);
+  }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
   .btn {
-    font: inherit; font-weight: 700; font-size: 1rem;
-    padding: 13px 16px; border-radius: 7px;
-    border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
+    font: inherit; font-weight: 600; font-size: .95rem;
+    padding: 13px 20px; border-radius: 999px;
+    border: 0; background: var(--accent); color: var(--accent-ink);
     cursor: pointer; width: 100%;
+    transition: transform .5s var(--muelle), background-color .2s ease;
   }
-  .btn:hover { filter: brightness(1.06); }
-  .btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .btn:hover {
+    transform: translateY(-2px);
+    background: color-mix(in oklch, var(--accent), white 12%);
+  }
+  .btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
   .bar {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
-    background: var(--surface); border-top: 1px solid var(--line);
+    background: color-mix(in oklch, var(--surface), transparent 8%);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--line);
     padding: 12px 18px calc(12px + env(safe-area-inset-bottom));
     display: flex; align-items: center; justify-content: space-between; gap: 14px;
-    box-shadow: 0 -4px 20px rgba(20,32,42,.08);
   }
   @media (min-width: 900px) { .bar { display: none; } }
-  .bar .k { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
-  .bar .v { font-family: var(--mono); font-size: 1.5rem; font-weight: 700; letter-spacing: -.02em; }
-  .bar .btn { width: auto; padding: 11px 18px; font-size: .92rem; }
+  .bar .k { font-size: .62rem; text-transform: uppercase; letter-spacing: .14em; color: var(--faint); font-weight: 600; }
+  .bar .v { font-variant-numeric: tabular-nums; font-size: 1.6rem; font-weight: 800; font-stretch: 110%; letter-spacing: -.035em; }
+  .bar .btn { width: auto; padding: 11px 20px; font-size: .9rem; }
 
-  footer { margin-top: 26px; color: var(--muted); font-size: .85rem; text-align: center; }
+  footer { margin-top: 30px; color: var(--faint); font-size: .85rem; text-align: center; }
   footer a { color: var(--accent); }
-  .fine { color: var(--muted); font-size: .8rem; margin: 0; }
+  .fine { color: var(--faint); font-size: .8rem; margin: 0; }
 
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
@@ -151,7 +182,8 @@
 <body>
 <div class="wrap">
   <header>
-    <p class="eyebrow">Sergio García · Desarrollo web</p>
+    <a class="volver" href="https://charcoles-hub.github.io/">← Volver al portfolio</a>
+    <p class="eyebrow">Sergio García · Diseñador web</p>
     <h1>Calcula lo que cuesta tu web</h1>
     <p class="lede">Marca lo que necesita tu negocio y verás el precio y el plazo al momento. Sin compromiso: cuando lo envíes te contesto en 24 horas con el presupuesto cerrado por escrito.</p>
   </header>
