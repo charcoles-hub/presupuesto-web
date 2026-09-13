@@ -156,12 +156,12 @@
     <p class="lede">Marca lo que necesita tu negocio y verás el precio y el plazo al momento. Sin compromiso: cuando lo envíes te contesto en 24 horas con el presupuesto cerrado por escrito.</p>
   </header>
 
-  <form class="cols" action="https://formsubmit.co/scharcoles@gmail.com" method="POST" id="form">
-    <input type="hidden" name="_subject" value="Nuevo presupuesto desde la calculadora">
-    <input type="hidden" name="_template" value="table">
-    <input type="hidden" name="_captcha" value="false">
-    <input type="hidden" name="_next" value="https://charcoles-hub.github.io/presupuesto-web/gracias.html">
-    <div class="hp"><label>No rellenar<input type="text" name="_honey" tabindex="-1" autocomplete="off"></label></div>
+  <form class="cols" action="https://api.web3forms.com/submit" method="POST" id="form">
+    <input type="hidden" name="access_key" value="5a2a409b-c60a-49a7-8f70-4a1282a1c1ab">
+    <input type="hidden" name="subject" value="Nuevo presupuesto desde la calculadora">
+    <input type="hidden" name="from_name" value="Calculadora de presupuestos">
+    <input type="hidden" name="redirect" value="https://charcoles-hub.github.io/presupuesto-web/gracias.html">
+    <div class="hp"><label>No rellenar<input type="checkbox" name="botcheck" tabindex="-1"></label></div>
     <input type="hidden" name="Total" id="f_total" value="500 €">
     <input type="hidden" name="Plazo" id="f_plazo" value="7 días">
 
