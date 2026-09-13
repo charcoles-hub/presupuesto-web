@@ -172,6 +172,30 @@
   .bar .v { font-variant-numeric: tabular-nums; font-size: 1.6rem; font-weight: 800; font-stretch: 110%; letter-spacing: -.035em; }
   .bar .btn { width: auto; padding: 11px 20px; font-size: .9rem; }
 
+  .mas { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+  .mas[open] { background: transparent; border-color: transparent; }
+  .mas > summary {
+    list-style: none; cursor: pointer;
+    display: grid; grid-template-columns: 1fr auto; align-items: center;
+    gap: 4px 12px; padding: 16px 18px;
+    border-radius: 12px;
+    transition: background-color .2s ease;
+  }
+  .mas > summary::-webkit-details-marker { display: none; }
+  .mas > summary:hover { background: var(--surface-2); }
+  .mas__t { font-weight: 600; font-size: .95rem; }
+  .mas__t::after { content: ' ↓'; color: var(--accent); }
+  .mas[open] .mas__t::after { content: ' ↑'; }
+  .mas__pista { grid-column: 1 / -1; color: var(--muted); font-size: .84rem; }
+  .mas__n {
+    min-width: 22px; text-align: center;
+    background: var(--accent); color: var(--accent-ink);
+    border-radius: 999px; padding: 2px 8px;
+    font-size: .72rem; font-weight: 700; font-variant-numeric: tabular-nums;
+  }
+  .mas__cuerpo { display: flex; flex-direction: column; gap: 18px; padding-top: 4px; }
+  .mas[open] > summary { margin-bottom: 14px; background: var(--surface); border: 1px solid var(--line); }
+
   footer { margin-top: 30px; color: var(--faint); font-size: .85rem; text-align: center; }
   footer a { color: var(--accent); }
   .fine { color: var(--faint); font-size: .8rem; margin: 0; }
@@ -243,6 +267,25 @@
           <span class="price">100 €<span class="days">+2 días</span></span>
         </label>
         <label class="row">
+          <input type="checkbox" name="Quiere" value="Segundo idioma (150 €)" data-precio="150" data-dias="2">
+          <span>
+            <span class="name">La web en dos idiomas</span>
+            <span class="desc">Toda traducida y con selector. Catalán, castellano o inglés.</span>
+          </span>
+          <span class="price">150 €<span class="days">+2 días</span></span>
+        </label>
+      </section>
+
+      <details class="mas">
+        <summary>
+          <span class="mas__t">¿Necesitas algo más?</span>
+          <span class="mas__n" id="masCuenta" hidden></span>
+          <span class="mas__pista">Blog, galería de trabajos, correo profesional, textos legales, traslado desde tu web…</span>
+        </summary>
+        <div class="mas__cuerpo">
+      <section class="card">
+        <h2>Más contenido</h2>
+        <label class="row">
           <input type="checkbox" name="Quiere" value="Analítica (50 €)" data-precio="50" data-dias="1">
           <span>
             <span class="name">Saber cuánta gente entra y qué mira</span>
@@ -258,10 +301,6 @@
           </span>
           <span class="price">50 €<span class="days">+1 día</span></span>
         </label>
-      </section>
-
-      <section class="card">
-        <h2>Más contenido</h2>
         <label class="row">
           <input type="checkbox" name="Quiere" value="Blog (100 €)" data-precio="100" data-dias="2">
           <span>
@@ -290,14 +329,6 @@
 
       <section class="card">
         <h2>Funciones</h2>
-        <label class="row">
-          <input type="checkbox" name="Quiere" value="Segundo idioma (150 €)" data-precio="150" data-dias="2">
-          <span>
-            <span class="name">La web en dos idiomas</span>
-            <span class="desc">Toda traducida y con selector. Catalán, castellano o inglés.</span>
-          </span>
-          <span class="price">150 €<span class="days">+2 días</span></span>
-        </label>
         <label class="row">
           <input type="checkbox" name="Quiere" value="Formulario avanzado (75 €)" data-precio="75" data-dias="1">
           <span>
@@ -335,6 +366,8 @@
           <span class="price">100 €<span class="days">+2 días</span></span>
         </label>
       </section>
+        </div>
+      </details>
 
       <section class="card">
         <h2>Mantenimiento<span class="hint">Va aparte del precio de la web. Es opcional y puedes decidirlo después.</span></h2>
@@ -433,6 +466,15 @@
     document.getElementById('mensual').textContent = mes ? eur(mes) + '/mes' : '—';
     document.getElementById('f_total').value = eur(total);
     document.getElementById('f_plazo').value = dias + ' días';
+
+    // Lo plegado tiene que delatarse: si hay algo marcado ahí dentro, se dice
+    // en el resumen y el bloque se abre solo.
+    const mas = document.querySelector('.mas');
+    const dentro = mas.querySelectorAll('input[type="checkbox"]:checked').length;
+    const cuenta = document.getElementById('masCuenta');
+    cuenta.textContent = dentro;
+    cuenta.hidden = !dentro;
+    if (dentro) mas.open = true;
   }
 
   cat.addEventListener('change', pintar);
